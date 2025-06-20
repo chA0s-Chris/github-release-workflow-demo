@@ -26,6 +26,10 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
+      - name: Decode SNK
+        run: |
+          echo "${{ secrets.DUMMYLIB_SNK }}" | base64 --decode > DummyLib.snk
+
       - name: Restore & Pack
         run: |
           dotnet tool restore
