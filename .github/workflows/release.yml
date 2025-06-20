@@ -59,13 +59,13 @@ jobs:
         run: |
           cat CHANGELOG.md
 
-#      - name: Commit CHANGELOG.md
-#        uses: EndBug/add-and-commit@v9
-#        with:
-#          author_name: 'github-actions[bot]'
-#          author_email: 'github-actions[bot]@users.noreply.github.com'
-#          message: "docs: update CHANGELOG for v${{ github.event.inputs.version }} [skip ci]"
-#          add: 'CHANGELOG.md'
+      - name: Commit CHANGELOG.md
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: 'github-actions[bot]'
+          author_email: 'github-actions[bot]@users.noreply.github.com'
+          message: "docs: update CHANGELOG for v${{ github.event.inputs.version }} [skip ci]"
+          add: 'CHANGELOG.md'
 
       - name: Restore & Pack
         run: |
