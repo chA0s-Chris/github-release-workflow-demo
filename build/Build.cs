@@ -43,12 +43,17 @@ internal class Build : NukeBuild,
 
     private AbsolutePath CoverageSummary => From<IReportCoverage>().CoverageReportDirectory / "Summary.json";
 
+    public String SemanticVersion { get; set; }
+
+    public String AssemblyVersion { get; set; }
+
     public Configure<DotNetBuildSettings> CompileSettings => settings =>
-        settings.SetAssemblyVersion(ReleaseVersion)
-                .SetFileVersion(ReleaseVersion)
-                .SetInformationalVersion(ReleaseVersion)
+        settings.SetAssemblyVersion(AssemblyVersion)
+                .SetFileVersion(AssemblyVersion)
+                .SetInformationalVersion(SemanticVersion)
                 .EnableContinuousIntegrationBuild()
                 .EnableTreatWarningsAsErrors();
+
 
     public Configuration Configuration => Configuration.Release;
 
@@ -62,7 +67,7 @@ internal class Build : NukeBuild,
                 .AddProperty("AssemblyOriginatorKeyFile", "../../DummyLib.snk")
                 .EnableIncludeSymbols()
                 .SetSymbolPackageFormat(DotNetSymbolPackageFormat.snupkg)
-                .SetVersion(ReleaseVersion);
+                .SetVersion(SemanticVersion);
 
     public Configure<DotNetPublishSettings> PublishSettings => settings =>
         settings.EnableContinuousIntegrationBuild();
@@ -110,6 +115,15 @@ internal class Build : NukeBuild,
     Boolean IReportCoverage.CreateCoverageHtmlReport => true;
 
     Boolean IReportCoverage.ReportToCodecov => false;
+
+    protected override void OnBuildCreated()
+    {
+        if (!SemanticVersioning.Version.TryParse(ReleaseVersion, out var version))
+            Assert.Fail($"Not a valid semantic version: {ReleaseVersion}");
+
+        SemanticVersion = version.ToString();
+        AssemblyVersion = $"{version.Major}.{version.Minor}.{version.Patch}.0";
+    }
 
     public static Int32 Main() => Execute<Build>(x => ((ICompile)x).Compile);
 
