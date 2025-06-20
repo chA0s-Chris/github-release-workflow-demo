@@ -26,6 +26,14 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
+      - name: Decode SNK
+        run: |
+          echo "${{ secrets.DUMMYLIB_SNK }}" | base64 --decode > DummyLib.snk
+
+      - name: Create tag version
+        run: |
+          git tag -a "v${{ github.event.inputs.version }}" -m "Release v${{ github.event.inputs.version }}"
+
       - name: Generate CHANGELOG.md
         id: changelog
         uses: requarks/changelog-action@v1
@@ -45,17 +53,12 @@ jobs:
 #          message: "docs: update CHANGELOG for v${{ github.event.inputs.version }} [skip ci]"
 #          add: 'CHANGELOG.md'
 
-      - name: Decode SNK
-        run: |
-          echo "${{ secrets.DUMMYLIB_SNK }}" | base64 --decode > DummyLib.snk
-
       - name: Restore & Pack
         run: |
           bash build.sh Pack --release-version ${{ github.event.inputs.version }}
 
-      - name: Tag version
+      - name: Push tag version
         run: |
-          git tag -a "v${{ github.event.inputs.version }}" -m "Release v${{ github.event.inputs.version }}"
           git push origin "v${{ github.event.inputs.version }}"
 
       - name: Create GitHub Release
