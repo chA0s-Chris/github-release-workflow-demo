@@ -26,14 +26,24 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
+      - name: Initialize git stuff
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch --tags
+          TAG_COUNT=$(git tag | wc -l)
+          if [ "$TAG_COUNT" -lt 2 ]; then
+            echo "::notice::Only one tag found; creating dummy tag for changelog"
+            ROOT_COMMIT=$(git rev-list --max-parents=0 HEAD)
+            git tag v0.0.0 "$ROOT_COMMIT"
+          fi
+
       - name: Decode SNK
         run: |
           echo "${{ secrets.DUMMYLIB_SNK }}" | base64 --decode > DummyLib.snk
 
       - name: Create tag version
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag -a "v${{ github.event.inputs.version }}" -m "Release v${{ github.event.inputs.version }}"
 
       - name: Generate CHANGELOG.md
