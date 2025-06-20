@@ -16,6 +16,13 @@ public class DummyPrinter
         ArgumentNullException.ThrowIfNull(dummy);
         _textWriter.WriteLine(dummy.Text);
     }
+
+    public void Print(params Dummy[] dummies)
+    {
+        ArgumentNullException.ThrowIfNull(dummies);
+        foreach (var dummy in dummies)
+        {
+            Print(dummy);
+        }
+    }
 }
-
-
