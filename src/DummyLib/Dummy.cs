@@ -3,5 +3,3 @@
 namespace Chaos.DummyLib;
 
 public record Dummy(String Text);
-
-
