@@ -16,5 +16,3 @@ public class TextWriterMock : TextWriter
         base.WriteLine(value);
     }
 }
-
-
