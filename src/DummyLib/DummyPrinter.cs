@@ -17,3 +17,5 @@ public class DummyPrinter
         _textWriter.WriteLine(dummy.Text);
     }
 }
+
+
