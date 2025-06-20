@@ -1,0 +1,30 @@
+<Project>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <PropertyGroup>
+    <TargetFrameworks>$(MainTargets)</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>DummyLib.png</PackageIcon>
+    <Description>DummyLib - Just a dummy library that does nothing.</Description>
+    <Authors>Christian Flessa</Authors>
+    <Copyright>Copyright © 2025 Christian Flessa</Copyright>
+    <PackageProjectUrl>https://github.com/chA0s-Chris/github-release-workflow-demo</PackageProjectUrl>
+    <PackageTags>Dummy;Lib</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <DefineConstants>$(DefineConstants);$(AdditionalConstants)</DefineConstants>
+    <Version>0.1.0-dev</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" Visible="false" PackagePath="" />
+    <None Include="../../dist/DummyLib.png" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+</Project>

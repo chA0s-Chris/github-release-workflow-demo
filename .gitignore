@@ -52,3 +52,14 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Nuke
+.nuke/*
+!.nuke/parameters.json
+
+###
+*.user
+.idea
+
+# signing key
+DummyLib.snk
