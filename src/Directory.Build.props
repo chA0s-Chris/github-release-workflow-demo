@@ -13,7 +13,6 @@
     <PackageTags>Dummy;Lib</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <DefineConstants>$(DefineConstants);$(AdditionalConstants)</DefineConstants>
-    <Version>0.1.0-dev</Version>
   </PropertyGroup>
 
   <ItemGroup>

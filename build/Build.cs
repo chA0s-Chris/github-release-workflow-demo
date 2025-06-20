@@ -28,6 +28,9 @@ internal class Build : NukeBuild,
 
     private static AbsolutePath TestsDirectory => RootDirectory / "tests";
 
+    [Parameter]
+    public String ReleaseVersion { get; set; } = "0.1.0-dev";
+
     private Target Clean => target =>
         target.Before<IRestore>()
               .Executes(() =>
@@ -41,7 +44,10 @@ internal class Build : NukeBuild,
     private AbsolutePath CoverageSummary => From<IReportCoverage>().CoverageReportDirectory / "Summary.json";
 
     public Configure<DotNetBuildSettings> CompileSettings => settings =>
-        settings.EnableContinuousIntegrationBuild()
+        settings.SetAssemblyVersion(ReleaseVersion)
+                .SetFileVersion(ReleaseVersion)
+                .SetInformationalVersion(ReleaseVersion)
+                .EnableContinuousIntegrationBuild()
                 .EnableTreatWarningsAsErrors();
 
     public Configuration Configuration => Configuration.Release;
@@ -55,7 +61,8 @@ internal class Build : NukeBuild,
                 .AddProperty("SignAssembly", "true")
                 .AddProperty("AssemblyOriginatorKeyFile", "../../DummyLib.snk")
                 .EnableIncludeSymbols()
-                .SetSymbolPackageFormat(DotNetSymbolPackageFormat.snupkg);
+                .SetSymbolPackageFormat(DotNetSymbolPackageFormat.snupkg)
+                .SetVersion(ReleaseVersion);
 
     public Configure<DotNetPublishSettings> PublishSettings => settings =>
         settings.EnableContinuousIntegrationBuild();
