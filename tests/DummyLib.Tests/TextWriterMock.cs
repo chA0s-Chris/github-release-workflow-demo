@@ -8,11 +8,14 @@ public class TextWriterMock : TextWriter
 {
     public override Encoding Encoding => Encoding.Default;
 
-    public String? LastWriteLine { get; set; }
+    public String? LastWriteLine { get; private set; }
+
+    public Int32 WriteLineCount { get; private set; }
 
     public override void WriteLine(String? value)
     {
         LastWriteLine = value;
+        WriteLineCount++;
         base.WriteLine(value);
     }
 }

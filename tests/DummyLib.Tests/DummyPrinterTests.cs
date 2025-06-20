@@ -20,4 +20,17 @@ public class DummyPrinterTests
 
         textWriterMock.LastWriteLine.Should().Be(text);
     }
+
+    [Test]
+    public void Print_WithThreeDummies_ShouldPrintThreeDummies()
+    {
+        var textWriterMock = new TextWriterMock();
+        var text = "Test text!";
+        var dummy = new Dummy(text);
+        var dummyPrinter = new DummyPrinter(textWriterMock);
+
+        dummyPrinter.Print(dummy, dummy, dummy);
+
+        textWriterMock.WriteLineCount.Should().Be(3);
+    }
 }
