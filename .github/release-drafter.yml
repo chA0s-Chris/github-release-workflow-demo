@@ -10,6 +10,7 @@ change-title-escapes: '\\<*_&'
 
 no-changes-template: '- No changes since last release'
 
+category-template: '### $TITLE'
 categories:
   - title: '✨ Features'
     labels:
