@@ -28,6 +28,8 @@ internal class Build : NukeBuild,
 
     private static AbsolutePath TestsDirectory => RootDirectory / "tests";
 
+    private static AbsolutePath ReleaseNotesFile => RootDirectory / "ReleaseNotes.md";
+
     [Parameter]
     public String ReleaseVersion { get; set; } = "0.1.0-dev";
 
@@ -43,9 +45,11 @@ internal class Build : NukeBuild,
 
     private AbsolutePath CoverageSummary => From<IReportCoverage>().CoverageReportDirectory / "Summary.json";
 
-    public String SemanticVersion { get; set; }
+    private String SemanticVersion { get; set; }
 
-    public String AssemblyVersion { get; set; }
+    private String ReleaseNotes { get; set; }
+
+    private String AssemblyVersion { get; set; }
 
     public Configure<DotNetBuildSettings> CompileSettings => settings =>
         settings.SetAssemblyVersion(AssemblyVersion)
@@ -67,7 +71,9 @@ internal class Build : NukeBuild,
                 .AddProperty("AssemblyOriginatorKeyFile", "../../DummyLib.snk")
                 .EnableIncludeSymbols()
                 .SetSymbolPackageFormat(DotNetSymbolPackageFormat.snupkg)
-                .SetVersion(SemanticVersion);
+                .SetVersion(SemanticVersion)
+                .When(!String.IsNullOrEmpty(ReleaseNotes),
+                      t => t.SetPackageReleaseNotes(ReleaseNotes));
 
     public Configure<DotNetPublishSettings> PublishSettings => settings =>
         settings.EnableContinuousIntegrationBuild();
@@ -123,6 +129,11 @@ internal class Build : NukeBuild,
 
         SemanticVersion = version.ToString();
         AssemblyVersion = $"{version.Major}.{version.Minor}.{version.Patch}.0";
+
+        if (ReleaseNotesFile.FileExists())
+        {
+            ReleaseNotes = ReleaseNotesFile.ReadAllText();
+        }
     }
 
     public static Int32 Main() => Execute<Build>(x => ((ICompile)x).Compile);
