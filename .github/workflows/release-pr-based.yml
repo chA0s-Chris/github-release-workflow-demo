@@ -72,11 +72,11 @@ jobs:
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
-        if: github.ref_type == 'tag'
         with:
           tag_name: ${{ steps.drafter.outputs.tag_name }}
           name: ${{ steps.drafter.outputs.name }}
           body: ${{ steps.drafter.outputs.body }}
+          draft: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
