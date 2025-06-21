@@ -1,4 +1,4 @@
-name: Release
+name: Release (Commit-based)
 
 on:
   workflow_dispatch:
@@ -54,10 +54,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: v${{ github.event.inputs.version }}
-
-      - name: Cat CHANGELOG.md
-        run: |
-          cat CHANGELOG.md
 
       - name: Commit CHANGELOG.md
         uses: EndBug/add-and-commit@v9
