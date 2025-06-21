@@ -39,7 +39,7 @@ jobs:
       - name: Create & push tag v${{ github.event.inputs.version }}
         run: |
           git tag -a "v${{ github.event.inputs.version }}" -m "Release v${{ github.event.inputs.version }}"
-          git push origin "v${{ github.event.inputs.version }}"
+#          git push origin "v${{ github.event.inputs.version }}"
 
       - name: Draft PR-level release notes
         id: drafter
@@ -52,33 +52,52 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Write CHANGELOG.md
+      - name: Update CHANGELOG.md
         run: |
-          echo "## ${{ steps.drafter.outputs.tag_name }}" > CHANGELOG.md
+          TAG="v${{ steps.drafter.outputs.tag_name }}"
+          BODY="${{ steps.drafter.outputs.body }}"
+
+          HEADER_FILE=$(mktemp)
+          CHANGES_FILE=$(mktemp)
+
+          sed `/^## /q' CHANGELOG.md > $HEADER_FILE
+          sed -n '/^## /,$p' CHANGELOG.md > $CHANGES_FILE
+
+          cat "$HEADER_FILE" > CHANGELOG.md
           echo "" >> CHANGELOG.md
-          echo "${{ steps.drafter.outputs.body }}" >> CHANGELOG.md
+          echo "## $TAG (`date +%Y-%m-%d`)" >> CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          echo "$BODY" >> CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          cat $CHANGES_FILE >> CHANGELOG.md
 
-      - name: Commit updated CHANGELOG.md
-        uses: EndBug/add-and-commit@v9
-        with:
-          author_name: 'github-actions[bot]'
-          author_email: 'github-actions[bot]@users.noreply.github.com'
-          message: "docs: update CHANGELOG for ${{ steps.drafter.outputs.tag_name }} [skip ci]"
-          add: 'CHANGELOG.md'
+          cat CHANGELOG.md
 
-      - name: Restore & Pack
-        run: |
-          bash build.sh Pack --release-version ${{ github.event.inputs.version }}
+#          echo "## ${{ steps.drafter.outputs.tag_name }}" > CHANGELOG.md
+#          echo "" >> CHANGELOG.md
+#          echo "${{ steps.drafter.outputs.body }}" >> CHANGELOG.md
 
-      - name: Publish GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.drafter.outputs.tag_name }}
-          name: ${{ steps.drafter.outputs.name }}
-          body: ${{ steps.drafter.outputs.body }}
-          draft: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Commit updated CHANGELOG.md
+#        uses: EndBug/add-and-commit@v9
+#        with:
+#          author_name: 'github-actions[bot]'
+#          author_email: 'github-actions[bot]@users.noreply.github.com'
+#          message: "docs: update CHANGELOG for ${{ steps.drafter.outputs.tag_name }} [skip ci]"
+#          add: 'CHANGELOG.md'
+
+#      - name: Restore & Pack
+#        run: |
+#          bash build.sh Pack --release-version ${{ github.event.inputs.version }}
+
+#      - name: Publish GitHub Release
+#        uses: softprops/action-gh-release@v2
+#        with:
+#          tag_name: ${{ steps.drafter.outputs.tag_name }}
+#          name: ${{ steps.drafter.outputs.name }}
+#          body: ${{ steps.drafter.outputs.body }}
+#          draft: false
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 #      - name: Push to nuget.org
 #        run: |
