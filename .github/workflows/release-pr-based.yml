@@ -54,14 +54,14 @@ jobs:
 
       - name: Update CHANGELOG.md
         run: |
-          TAG="v${{ steps.drafter.outputs.tag_name }}"
+          TAG="${{ steps.drafter.outputs.tag_name }}"
           BODY="${{ steps.drafter.outputs.body }}"
 
-          HEADER_FILE=$(mktemp)
-          CHANGES_FILE=$(mktemp)
+          HEADER_FILE="$(mktemp)"
+          CHANGES_FILE="$(mktemp)"
 
-          sed `/^## /q' CHANGELOG.md > $HEADER_FILE
-          sed -n '/^## /,$p' CHANGELOG.md > $CHANGES_FILE
+          sed "/^## /q" CHANGELOG.md > $HEADER_FILE
+          sed -n "/^## /,$p" CHANGELOG.md > $CHANGES_FILE
 
           cat "$HEADER_FILE" > CHANGELOG.md
           echo "" >> CHANGELOG.md
@@ -69,7 +69,7 @@ jobs:
           echo "" >> CHANGELOG.md
           echo "$BODY" >> CHANGELOG.md
           echo "" >> CHANGELOG.md
-          cat $CHANGES_FILE >> CHANGELOG.md
+          cat "$CHANGES_FILE" >> CHANGELOG.md
 
           cat CHANGELOG.md
 
