@@ -22,7 +22,7 @@ public class DummyPrinter
         ArgumentNullException.ThrowIfNull(dummies);
         foreach (var dummy in dummies)
         {
-            Print(dummy);
+            _textWriter.WriteLine($"* {dummy.Text}");
         }
     }
 }
