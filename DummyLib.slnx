@@ -12,10 +12,14 @@
     <File Path="renovate.json" />
     <File Path="global.json" />
   </Folder>
-  <Folder Name="/misc/github/" />
+  <Folder Name="/misc/github/">
+    <File Path=".github\release-drafter.yml" />
+  </Folder>
   <Folder Name="/misc/github/workflows/">
     <File Path=".github\workflows\ci.yml" />
     <File Path=".github\workflows\release-commit-based.yml" />
+    <File Path=".github\workflows\release-pr-based.yml" />
+    <File Path=".github\workflows\update-draft.yml" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src\DummyLib\DummyLib.csproj" Type="Classic C#" />
