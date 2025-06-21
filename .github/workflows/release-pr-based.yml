@@ -60,8 +60,8 @@ jobs:
           HEADER_FILE="$(mktemp)"
           CHANGES_FILE="$(mktemp)"
 
-          sed "/^## /q" CHANGELOG.md > $HEADER_FILE
-          sed -n "/^## /,$p" CHANGELOG.md > $CHANGES_FILE
+          sed '/^## /q' CHANGELOG.md > $HEADER_FILE
+          sed -n '/^## /,$p' CHANGELOG.md > $CHANGES_FILE
 
           cat "$HEADER_FILE" > CHANGELOG.md
           echo "" >> CHANGELOG.md
