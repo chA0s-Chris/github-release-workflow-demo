@@ -15,7 +15,7 @@ public class TextWriterMock : TextWriter
     public override void WriteLine(String? value)
     {
         LastWriteLine = value;
-        WriteLineCount++;
+        WriteLineCount++; // increment the counter
         base.WriteLine(value);
     }
 }
